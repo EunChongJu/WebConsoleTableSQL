@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Web Console Table View SQL</title>
+		<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+		<link href="css/index.css" rel="stylesheet">
+		<script src="js/data.js"></script>
+		<script src="js/function.js"></script>
+		<script src="js/parser.js"></script>
+		<script src="js/view.js"></script>
+	</head>
+	<body>
+		<div class="wrap">
+			<div class="query-wrap">
+				<textarea class="query" id="query"></textarea>
+				<button class="active" id="active" onclick="queryActive();">QUERY ACTIVE</button>
+			</div>
+			<div class="data-wrap">
+				<!--Table Use-->
+				<div id="table-frame"><!-- insert data -->
+					<table class="table">
+						<tr>
+							<th>id</th>
+							<th>password</th>
+							<th>email</th>
+							<th>phone</th>
+						</tr>
+						<tr>
+							<td>1234</td>
+							<td>asdf</td>
+							<td>asdf@asdf.com</td>
+							<td>0000000000000</td>
+						</tr>
+						<tr>
+							<td>5678</td>
+							<td>qwerty</td>
+							<td>qwerty@qwerty.com</td>
+							<td>11111111111111111</td>
+						</tr>
+					</table>
+				</div>
+				<!--or Div Use-->
+<!--
+				<div class="data">
+					<div class="header">
+						<div class="cell">id</div>
+						<div class="cell">password</div>
+						<div class="cell">email</div>
+						<div class="cell">phone</div>
+					</div>
+					<div class="row">
+						<div class="cell">1234</div>
+						<div class="cell">asdf</div>
+						<div class="cell">asdf@asdf.com</div>
+						<div class="cell">0000000000000</div>
+					</div>
+					<div class="row">
+						<div class="cell">5678</div>
+						<div class="cell">qwerty</div>
+						<div class="cell">qwerty@qwerty.com</div>
+						<div class="cell">11111111111111111</div>
+					</div>
+				</div>
+-->
+			</div>
+		</div>
+	</body>
+</html>
