@@ -100,7 +100,25 @@ function parserProgram(str) {
 	console.log(sqlStatementArr);
 }
 
-parserProgram('SELECT * FROM sample21;');
+parserProgram('SELECT * FROM tableSample;');
+parserProgram('SELECT query Col FROM sample21;');
+parserProgram('SELECT * FROM tableSample WHERE Quote = 2 ORDER BY Quote ASC or DESC;');
+// Find Bug: 'A=B' is begin to '=', 'AB'; Do have a space on both sides.
+parserProgram('SELECT view FROM sample WHERE Col = 3.14 ORDER BY Col ASC or DESC LIMIT 5;');
+
+parserProgram('INSERT INTO table_Student (Name, Class, Age) VALUES ("Jane","A",16);');
+parserProgram("INSERT INTO table_Student (Name, Class, Age) VALUES ('Jane','A',16);");
+// It's no problem that small and big is different.
+parserProgram("INSERT INTO table_Student value ('Jane','A',16);");
+
+parserProgram('UPDATE tableSample SET val = "SW";');
+parserProgram('UPDATE tableShow SET vista = "NULL" WHERE SET = "EXCHANGE";');
+// Can use Unicode...
+parserProgram('UPDATE 테이블명 SET 컬럼명1 = 변경할 값1,컬럼명2 = 변경할 값2 WHERE 컬럼명=값;');
+
+parserProgram('DELETE from sample21;');
+parserProgram('DELETE from table WHERE column = "value";');
+parserProgram('');
 
 /*
 function charAtType() {
