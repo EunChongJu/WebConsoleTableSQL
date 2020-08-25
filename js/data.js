@@ -199,3 +199,64 @@ var tableSample = {
 		}
 	]
 };
+
+
+var DatabaseManagementProgram = function() {
+	this.database = [];
+	
+	this.setColumn = function(name, type, formatSize, Null, Key, Default, Extra) {
+		var col = {};
+		
+		col.name = name;
+		col.type = type;
+		
+		if (type == 'date' || type == 'datetime' || type == 'time') col.format = formatSize;
+		else col.size = formatSize;
+		
+		if (Null != null) col.Null = Null;
+		if (Key) col.Key = Key;
+		if (Default) col.Default = Default;
+		if (Extra) col.Extra = Extra;
+		
+		return col;
+	};
+	
+	this.setColArr = function(columns) {
+		var columnArr = [];
+		
+		for (var i = 0; i < columns.length; i++) {
+			var column = columns[i];
+			columnArr.push(this.setColumn(column.name, column.type, column.formatSize, column.Null, column.Key, column.Default, column.Extra));
+		}
+		return columnArr;
+	};
+	
+	this.createTable = function(tableName, columns) {
+		var table = {
+			header: {
+				name: tableName,
+				set: []
+			},
+			data: []
+		};
+		
+		if (!columns.isArray()) columns = this.setColArr(columns);
+		table.header.set = columns;
+		
+		this.database.push(table);
+	};
+	
+	this.deleteTable = function(tableName) {
+		for (var i = 0; i < this.database.length; i++) {
+			if (this.database[i].header.name == tableName) {
+				var removeTable = this.database.splice(i,1);
+				return removeTable.header.name;
+			}
+		}
+	};
+	
+	
+};
+
+// 이를 생성자로 새로 생성하는 것은 새로운 데이터베이스를 생성하는 것과 같다.
+var database = new DatabaseManagementProgram();
