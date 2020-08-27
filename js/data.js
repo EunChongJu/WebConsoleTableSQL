@@ -1,120 +1,5 @@
 
 
-/*
-// 내 생각에 DESC 테이블명;을 소환했을 때 나오는 것처럼을 구성하는 것과
-// 데이터를 담는 그릇을 만들고 이를 모두 묶은 것을 테이블이라 한다.
-// 또한 테이블을 묶어서 데이터베이스라 한다. 라고 정의해서 만들면 좋을 것 같다.
-
-// JSON type
-var sampleDataTableSet = function() {
-	this.tableName = '';
-	this.dataFieldSet = {
-		id: {
-			Type: "int",
-			Type_size: 11,
-			Null: true,
-			Key: null,
-			Default: 'NULL',
-			Extra: null
-		},
-		name: {
-			Type: "varchar",
-			Type_size: 20,
-			Null: true,
-			Key: null,
-			Default: 'NULL',
-			Extra: null
-		},
-		birthday: {
-			Type: "date",
-			Type_size: 0,
-			Null: true,
-			Key: null,
-			Default: 'NULL',
-			Extra: null
-		},
-		address: {
-			Type: "varchar",
-			Type_size: 40,
-			Null: true,
-			Key: null,
-			Default: 'NULL',
-			Extra: null
-		}
-	};
-//	this.dataFieldSet.prototype.length = 4;
-	this.data = {
-		data: [
-			{
-				id: 1,
-				name: 'Serebrachi',
-				birthday: {
-					year: 1968,
-					month: 6,
-					day: 23
-				},
-				address: 'Dawning 79, NY, USA'
-			},
-			{
-				id: 2,
-				name: 'Jay Oreo',
-				birthday: {
-					year: 1991,
-					month: 12,
-					day: 26
-				},
-				address: 'Post Ave 83, SA, USA'
-			},
-			{
-				id: 3,
-				name: 'Hero',
-				birthday: {
-					year: 1989,
-					month: 1,
-					day: 7
-				},
-				address: 'Tokyo, Japan'
-			},
-			{
-				id: 4,
-				name: 'Sverige',
-				birthday: {
-					year: 2001,
-					month: 2,
-					day: 16
-				},
-				address: 'Stockholm, Sweden'
-			},
-		]
-	};
-//	this.data.length = 4;
-	
-};
-var dataO = new sampleDataTableSet();
-console.log(dataO.data.length);
-*/
-
-
-
-
-
-
-/*
-function showTable(data) {
-	var code = '';
-	
-	for (var i = 0; i < data.length; i++) {
-		code += '<table class="table" id="'+ data[i].name +'">';
-		var header;
-		for (var j = 0; j < header.length; j++) {
-			code += '<'+ j +'>';
-		}
-	}
-	
-	return code;
-}
-*/
-
 var tableSample = {
 	header: {
 		set: [
@@ -201,9 +86,12 @@ var tableSample = {
 };
 
 
+
+
 var DatabaseManagementProgram = function() {
 	this.database = [];
 	
+	// ???
 	this.setColumn = function(name, type, formatSize, Null, Key, Default, Extra) {
 		var col = {};
 		
@@ -231,6 +119,15 @@ var DatabaseManagementProgram = function() {
 		return columnArr;
 	};
 	
+	// 데이터베이스 함수 구성에 도움이 되거나 필요한 것
+	this.getTable = function(tableName) {
+		for (var i = 0; i < this.database.length; i++) {
+			if (this.database[i].header.name == tableName) return this.database[i];
+		}
+	};
+	
+	
+	// 데이터베이스에 있어서 사용되는 명령어 자체의 함수
 	this.createTable = function(tableName, columns) {
 		var table = {
 			header: {
@@ -254,6 +151,43 @@ var DatabaseManagementProgram = function() {
 			}
 		}
 	};
+	
+	this.select = function(tableName, col) {
+		var table = this.getTable(tableName);
+		
+		// col이 *이냐 아니면 각자의 col 속성을 가지느냐에 따라 리턴되는 값이 달라진다.
+		return table;
+	};
+	
+	this.desc = function(tableName) {
+		var table = this.getTable(tableName);
+		return table.header.set;
+	};
+	
+	// data - rows
+	this.insert = function(tableName, data, col) {
+		var list;
+		
+		if (col.length == data.length) {
+			// 여기에 col의 속성 값과 데이터 형식에 맞게 맞춰 넣는다.
+			// 만약 col이 비어있다면, data는 기존의 데이터 형식에 맞춰 넣는다.
+			
+			for (var i = 0; i < this.database.length; i++) {
+				if (this.database[i].header.name == tableName) {
+					this.database[i].data.push(list);
+				}
+			}
+		}
+	};
+	
+	this.delete = function(tableName) {
+		
+	};
+	
+	this.update = function(tableName) {
+		
+	};
+	
 	
 	
 };
