@@ -63,5 +63,43 @@ function.js 안에 SELECT에 해당하는 함수를 호출하면 테이블에 �
 parser.js가 하는 일은 구문을 분석하고 알맞은 함수를 function.js에서 호출하는 것이다.
 parser.js는 하는 일을 끝내면 마지막에 view.js를 호출하도록 한다.
 
+처리 방식은 다음과 같이 해결하면 될 것이다.
+SELECT (a, b, c) FROM sample21 WHERE b IS NOT NULL AND c <> 0
+- 모든 구문을 나누어 배열에 저장한다. (SELECT 다음에 오는 괄호 안의 쉼표는 생략된다. 단지 어떤 칼럼만 표시할 지만 알면 되니깐.)
+=> ['SELECT', '(', 'a', 'b', 'c', ')', 'FROM', 'sample21', 'WHERE', 'b', 'IS', 'NOT', 'NULL', 'AND', 'c', '<>', '0']
+
+- 그 다음, 맨 앞 구문이 SELECT임을 확인한다.
+
+- FROM 뒤에 있는 테이블 이름을 가져와 function.js 또는 data.js를 통해 SELECT 기능을 하는 함수를 호출하여 해당 테이블 데이터를 가져온다.
+
+- WHERE 다음에 있는 구문을 분석한다.
+b IS NOT NULL AND c <> 0
+-> (b IS NOT NULL) AND (c <> 0) -> (NOT (b IS NULL)) AND (c != 0) -> And(Not(IsNull(b)), Not(equals(c, 0)))
+
+- 이런 식으로 WHERE는 위와 같이 처리한다. true가 나오는 행만 반환할 수 있게 한다.
+- 그 다음, 표시될 칼럼을 분석하여 칼럼을 잘라내 반환한다. ex) col(...)(cols);
+- 처리가 완료되면, 해당 테이블 처리 결과는 view.js로 넘겨진다.
+- 결과 값이 표시된다.
+
 */
 
+
+var SQLProgram = function() {
+	this.select = function(tableName) {
+		return function(cols) {
+			var colsArr = cols;
+			return colsArr;
+		};
+	};
+	
+	this.where = function(gm) {
+		if (gm) return;
+	};
+	
+	this.insert = function(tableName) {
+		return function(values) {
+			var valArr = values;
+			return valArr;
+		};
+	}
+};
