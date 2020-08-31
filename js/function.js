@@ -47,11 +47,11 @@
 	
 	
 - view.js
-	SQL의 명령어를 처리한 결과를 표시하는 것이다.
+	SQL의 명령어를 처리한 결과를 디스플레이에 표시한다. View와 같다.
 - data.js
-	SQL의 명령어에 있어서
+	SQL의 명령어에 있어서 테이블과 테이블의 데이터를 관리하고 값을 반환한다. 여기서 Model의 역할과 같다.
 - function.js
-	SQL의 명령어에 있어서 
+	SQL의 명령어에 있어서 데이터를 얻어서 서브쿼리 등 명령 구문에 맞게 데이터를 가공하고 반환한다.
 
 
 일단 이 구조로 봐선 데이터베이스 안에 여러개의 테이블이 있고, 테이블을 추가하고 삭제하고 값을 바꾸는 것을 data.js가 맡는다.
@@ -83,8 +83,52 @@ b IS NOT NULL AND c <> 0
 
 */
 
+// var DatabaseManagementProgram = DatabaseManagementProgram();
 
 var SQLProgram = function() {
+	
+	this.DBMS = null;
+	
+	// 아마 여기에 SQL Program을 생성하는 즉시 하나의 데이터베이스가 생성되는 것이다.
+	// 이 프로그램 안에 여러 개의 테이블을 관리하는 것이여야 한다.
+	// 그래서 function.js 안에 있는 SQL Program이 하나의 데이터베이스로 행동해야 한다.
+	
+	
+	//// 여기는 생성자 자리
+	// 자바에서 생성자 같은 시작 함수
+	this.start = function() {
+		// 여기서 data.js의 모든 프로토타입을 생성자로 호출하여 SQLProgram에 저장된다.
+		// DatabaseManagementProgram
+		
+		this.DBMS = new DatabaseManagementProgram();
+	}
+	
+	//// 테이블 관리
+	// 테이블을 생성
+	this.createTable = function() {
+		
+		// create table 명령 구문에서 col과 data 등의 형식에 맞게 처리한 다음,
+		// 테이블을 생성하는 함수를 호출한다.
+		this.DBMS.createTable(tableName, columns);
+		
+	}
+	
+	// 테이블을 삭제
+	this.dropTable = function() {
+		
+		
+		this.DBMS.dropTable();
+	}
+	
+	// 테이블을 변경
+	this.alterTable = function() {
+		
+		
+		this.DBMS.alterTable();
+	}
+	
+	//// 테이블 데이터 관리
+	// SELECT : 테이블 데이터를 조회
 	this.select = function(tableName) {
 		return function(cols) {
 			var colsArr = cols;
@@ -92,14 +136,42 @@ var SQLProgram = function() {
 		};
 	};
 	
+	// WHERE : 데이터에서 조건에 부합하는 값을 찾기
 	this.where = function(gm) {
 		if (gm) return;
 	};
 	
+	// INSERT : 데이터 삽입 (추가)
 	this.insert = function(tableName) {
 		return function(values) {
 			var valArr = values;
 			return valArr;
 		};
-	}
+	};
+	
+	
+	this.delete = function() {
+		
+	};
+	
+	this.update = function() {
+		
+	};
+	
+	// DESC : 테이블 
+	this.desc = function() {
+		
+	};
+	
+	
+	// ORDER BY : 데이터 정렬
+	this.orderBy = function(dataArr, column, type) {	// type : DESC or ASC
+		var orderArr = [];
+		
+		if (column) return column;
+		
+		return orderArr;
+	};
+	
 };
+
