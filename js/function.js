@@ -83,9 +83,56 @@ b IS NOT NULL AND c <> 0
 
 */
 
+
+
+/*
+혹시 모르니 달아놓는 팁이나 주의사항, 경고 등
+* 여기서는 내부 처리 순서에 대해 알아볼 것이다.
+그래야 개발에 있어서 문제가 발생하거나 순서 충돌을 미연에 예방을 할 수 있을 것이라 본다.
+
+WHERE 구 -> SELECT 구 : WHERE 구 행 추출 -> SELECT 구: 열을 선택해 별명을 붙임
+
+* AS 구문을 통해 계산
+SELECT *, price * quantity AS amount FROM sample34 ORDER BY amount DESC;
+이 경우에는 WHERE -> SELECT -> ORDER BY 순으로 처리된다.
+ORDER BY 구에서는 SELECT 구에서 지정한 별명을 사용할 수 있다.
+
+* NULL 값의 연산
+NULL 값의 연산에서 나눗셈이나 덧셈 등 계산을 해 보아도 공통적으로 NULL로 연산하면 NULL이 된다!
+
+*/
+
+
+
 // var DatabaseManagementProgram = DatabaseManagementProgram();
 
 var SQLProgram = function() {
+	// Data Sample for Data Set.
+	this.dataSetType = {
+		"INTEGER": [],
+		"CHAR": [],
+		"VARCHAR": [],
+		"DATE": {},
+		"TIME": {},
+		"DATETIME": {},
+		"DECIMAL": {}
+	};
+	// Data Sample for Data Arr.
+	this.dataType = {
+		"INTEGER": 0,
+		"CHAR": '',
+		"VARCHAR": '',
+		"DATE": {
+			"YEAR": 4000, "MONTH": 12, "DAY": 31	// YEAR는 서력기원을 사용, 기원전은 -로 표기하고 0은 없다.
+		},
+		"TIME": {
+			"HOUR": 24, "MINUTE": 60, "SECOND": 60
+		},
+		"DATETIME": {
+			"YEAR": 4000, "MONTH": 12, "DAY": 31, "HOUR": 24, "MINUTE": 60, "SECOND": 60
+		},
+		"DECIMAL": 0.0
+	};
 	
 	this.DBMS = null;
 	
@@ -127,6 +174,7 @@ var SQLProgram = function() {
 		this.DBMS.alterTable();
 	}
 	
+	
 	//// 테이블 데이터 관리
 	// SELECT : 테이블 데이터를 조회
 	this.select = function(tableName) {
@@ -149,29 +197,257 @@ var SQLProgram = function() {
 		};
 	};
 	
-	
+	// DELETE : 데이터 삭제 (WHERE를 써서 삭제하도록 한다. 차후 논리 삭제 개념을 도입할 것임)
 	this.delete = function() {
 		
 	};
 	
+	// UPDATE : 데이터 갱신 (데이터를 갱신하도록 한다. 역시 WHERE를 사용하여 처리함)
 	this.update = function() {
 		
 	};
 	
+	
 	// DESC : 테이블 
-	this.desc = function() {
+	this.desc = function(tableName) {
+		// 대충 어떻게 해서 테이블 이름과 일치한 것을 찾았으면 이 테이블의 속성(DESC)을 배열로 반환하도록 한다.
+		var resultArr = [];
+		
+		return resultArr;
+	};
+	
+	// 테이블 열에 이러한 열의 이름이 있는지 확인하기 위함
+	this.isColumn = function(cols) {
+		// 대충 어떻게 해서 DESC table 명령과 같이 받았다 치자.
+		var descArr = [];
+		
+		for (var i = 0; i < descArr.length; i++) {
+			if (cols === descArr[i].name) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	// IS NULL : NULL 값 검색
+	this.isNull = function(cols) {
+		// NULL인 col 데이터 값만 반환한다.
+	};
+	
+	// IS NOT NULL : NULL이 아닌 값 검색
+	this.isNotNull = function(cols) {
+		// isNull과는 다르게 함수는 아니지만 IS NOT NULL을 지원하기 위함
+	};
+	
+	
+	// LIKE : 패턴 매칭
+	this.like = function(col, pattern) {
 		
 	};
 	
 	
-	// ORDER BY : 데이터 정렬
+	
+	// EXISTS : 상관 서브쿼리
+	this.exists = function() {
+		
+	}
+	this.notExists = function() {
+		
+	}
+	this.in = function() {
+		
+	}
+	
+	
+	// AS : 열의 별명
+	// SELECT *, price * quantity FROM sample34;라고 지정하면 새로운 칼럼이 생긴다.
+	// 생기는 칼럼에 이름(별명)을 붙일 수 있게 하는 것이 AS이다.
+	// SELECT *, price * quantity AS "amount" FROM sample34;
+	// 그리고 칼럼을 새로 생기게 하고, 별명을 붙일 수 있게 하는 것은 어떻게 하면 좋을까??
+	
+	
+	//// 문자열 연산
+	// 문자열 결합
+	// 문자열 결합에서 연산자는 다양한데, +, ||, CONCAT이 있다. 방언임.
+	// SELECT CONCAT(quantity, unit) FROM sample35;
+	
+	// SUBSTRING 함수 : 문자열을 잘라내 추출하는 것
+	
+	// TRIM 함수 : 문자열에서 앞뒤로 여분의 스페이스가 있을 때, 이를 제거해줌.
+	
+	// CHARACTER_LENGTH 함수 : 문자열의 길이를 계산해 돌려주는 함수임. VARCHAR은 가변 길이이므로 서로 다름.
+	// OCTET_LENGTH 함수 : 문자열 길이를 바이트 단위로 계산하여 반환하는 함수
+	
+	//// 날짜 연산
+	
+	// CUREENT_TIMESTAMP : 시스템 날짜 확인
+	
+	
+	// ORDER BY : 데이터 정렬 (기본값은 ASC임)
 	this.orderBy = function(dataArr, column, type) {	// type : DESC or ASC
 		var orderArr = [];
 		
+		// 가상의 코드 시작
+		var data = [];	// 가상의 코드임.
+		for (var i = 0; i < dataArr.length; i++) {
+			if (dataArr[i][column] < dataArr[i+1][column]) {	// 임시로 이런 타입의 구조로 만들면 될 것 같음
+				var temp = dataArr[i];		// 아니면 정렬 알고리즘을 참고하여 만든다.
+				dataArr[i] = dataArr[i+1];	// 만약 행이 일정개수를 넘어가면, 다른 알고리즘을 사용하도록 한다.
+				dataArr[i+1] = temp;		// 같은 수라면 복수 정렬을 감안하여 정리하지 않는다.
+			}
+		}
+		// 가상의 코드 종료
+		
 		if (column) return column;
+		
+		// DESC냐 ASC냐에 따라 내림차순 또는 오름차순이 된다.
+		
+		// NULL이라면, 가장 나중으로 배치하도록 하거나 가장 먼저(0보다 앞서) 배치해야 할 수도 있다.
+		// 이걸 정해야 한다.
 		
 		return orderArr;
 	};
+	
+	// ORDER BY : 데이터 복수 정렬 (파라미터는 모두 배열임)
+	this.orderAndOrderBy = function(dataArr, columns, types) {
+		var resultArr = [];
+		// 왼쪽 먼저 정렬 후 오른쪽 세부 정렬 방식을 채택한다.
+		
+		// 모든 column이 정렬될 때까지 반복
+		for (var i = 0; i < columns.length; i++) {
+			// 문제가 하나 있다.
+			// a가 먼저 정렬되고 나서, b를 세부 정렬을 해야 하는데,
+			// b가 a 하위 정렬 형태를 띄고 있다는 점이다.
+			// 즉, a 정렬 완료하고 나면, 정렬 된 a 그룹 내 b를 정렬해야 한다는 것이다.
+			// a값이 같은 원소가 3개 있다면, 같은 a 아이템 배열 3개 안에 b를 정렬해야 한다는 것이다.
+		}
+		return resultArr;
+	}
+	
+	// 결과 행 제한하기 (최대 행수 제한 : 큰 규모의 이미지를 페이지 단위로 나누는 것과 비슷함)
+	this.limit = function(num, offset) {	// offset의 값은 0부터임
+		var dataArr = [];	// 이게 WHERE 검색 후 ORDER BY로 정렬된 결과 데이터 값 배열이다. (임시)
+		
+		// SELECT 열명 FROM 테이블명 WHERE 조건식 ORDER BY 열명 LIMIT 행수 [OFFSET 시작행]
+		// 사실 얘는 표준이 아님
+		
+		// offset은 1페이지에서 2페이지로 넘어갈 때 2페이지부터 보여주기 위한 것과 같음.
+		var resultArr = [];
+		var startIndex = 0;
+		
+		if (offset) startIndex += offset;	// 오프셋이 지정 되있거나 0이 아닐 때
+		
+		for (var i = startIndex; i < (startIndex + num); i++) {
+			var item = dataArr[i];
+			resultArr.push(item);	// 아이템 배열의 오프셋과 제한 수에 따라 새로운 배열로 저장하여 반환한다.
+		}
+		
+		return resultArr;
+	}
+	
+	
+	// BETWEEN a AND b : a 부터 b 까지의 모든 행을 잘라내 반환한다.
+	this.between = function(a, b) {
+		
+	};
+	
+	//// 논리식
+	// AND
+	this.and = function(a, b) {
+		return a && b;
+	};
+	
+	// OR
+	this.or = function(a, b) {
+		return a || b;
+	};
+	
+	// NOT
+	this.not = function(item) {
+		return !item;
+	};
+	
+	//// 비교식
+	
+	// 참 애매한게, =는 WHERE a = 1을 원하는 경우거나 a = 1와 같은 경우인가를 묻는 것이라는 것이다.
+	// WHERE a > 10이면 a가 10 이상인 값을 가진 데이터 배열을 반환하고,
+	// 20 > 10이면 참을, 10 > 20이면 거짓을 반환하도록 하는 속성을 가진다.
+	// 대체로 a가 데이터가 아니라면 반환할 값은 데이터 배열로, WHERE 기능을 하도록 한다.
+	
+	// = 연산자 : equivalence
+	this.equal = function(a, b) {
+		
+	};
+	
+	// <> 연산자 : inequality
+	this.notEqual = function(a, b) {
+		
+	};
+	
+	// > 연산자 : greatness
+	this.prototyper = function(a, b) {
+		
+	};
+	
+	// >= 연산자 : Greater than or equal to
+	this.prototyper = function(a, b) {
+		
+	};
+	
+	// < 연산자 : littleness
+	this.prototyper = function(a, b) {
+		
+	};
+	
+	// <= 연산자 : Less than or equal to
+	this.prototyper = function(a, b) {
+		
+	};
+	
+	
+	//// 수치연산
+	
+	//// 사칙연산
+	// 여기서 사칙연산은 계산 뿐만 아니라 SELECT에서 새로운 칼럼을 생성하기도 한다.
+	
+	// + 연산자 : 덧셈(가산)
+	this.addition = function(a, b) {
+		
+	};
+	
+	// - 연산자 : 뺄셈(감산)
+	this.subtraction = function(a, b) {
+		
+	};
+	
+	// * 연산자 : 곱셈(승산)
+	this.multiplication = function(a, b) {
+		
+	};
+	
+	// / 연산자 : 나눗셈(제산)
+	this.division = function(a, b) {
+		
+	};
+	
+	// % 연산자 : 나머지
+	this.remainder = function(a, b) {
+		
+	};
+	
+	// ROUND 함수 : 반올림
+	this.round = function(cols, units) {
+		// 소수점 이하를 반올림
+		// units는 몇단위로 반올림을 할 것인지를 지정.
+		// units가 0이면 소수점 첫째자리에서, 2이면 셋째자리에서, 반대로 -2이면 10단위로, -4이면 천단위로 반올림한다.
+	}
+	// TRUNCATE 함수 : 버림
+	this.truncate = function(cols, units) {
+		// 버림
+		// 여기 외에 나머지는 데이터베이스 매뉴얼을 참고해서 개발하도록 한다.
+	}
 	
 };
 
