@@ -3,22 +3,25 @@
 var SQL = function() {
 	var tableDataArr = new Array();
 	
-	var tableSample = {
-		"name": '',	// Table Name
-		"attr": [],	// Table Attribute
-		"data": []	// Table Tuples
+	this.getSampleTable = function() {
+		return {
+			"name": '',
+			"attr": [],
+			"data": []
+		};
 	};
 	
-	var tableAttrSample = {	// It's' element of in the table attr array
-		"name": '',
-		"type": "",	// varchar, char, int, string ...
-		"format": 0,	// varchar, char, int is use number of length. date is use ex to 'YY/MM/DD'
-		"null": false,	// true or false
-		"key": '',	// Key: 'super', 'candidate', 'primary', 'alternate', 'foreign'
-		"default": '',
-		"extra": ''
+	this.getSampleAttr = function() {
+		return {
+			"name": '',
+			"type": "",	// varchar, char, int, string ...
+			"format": 0,	// varchar, char, int is use number of length. date is use ex to 'YY/MM/DD'
+			"null": false,	// true or false
+			"key": '',	// Key: 'super', 'candidate', 'primary', 'alternate', 'foreign'
+			"default": '',
+			"extra": ''
+		};
 	};
-	
 	
 	// v is null that return true, is not null that return false. And not is added return not isNull()
 	this.isNull = function(v) {
@@ -28,8 +31,11 @@ var SQL = function() {
 		return !this.isNull(v);
 	};
 	
+	// ONLY TEST
 	this.getTableAll = function() {
-		return tableDataArr;
+		var arr = new Array();
+		for (var i = 0; i < tableDataArr.length; i++) arr.push(tableDataArr[i]);
+		return arr;
 	};
 	
 	this.getTableIndex = function(tableName) {
@@ -74,7 +80,7 @@ var SQL = function() {
 	
 	// DDL
 	this.create = function(tableName, tableAttr) {
-		var newTable = tableSample;	// load tableSample to new variable for newTable
+		var newTable = this.getSampleTable();	// load tableSample to new variable for newTable
 		
 		newTable.name = tableName;
 		newTable.attr = tableAttr;
@@ -174,24 +180,37 @@ var SQL = function() {
 
 
 // EXPERIMENT TEST ZONE
-var sql = new SQL();
+function test() {
+	var sql = new SQL();
+	
+	// CREATE TABLE and like SELECT
+	console.log('CREATE TABLE SQL');
+	console.log(sql.create('SQL', []));
+	
+	console.log(sql.getTable('SQL'));
+	console.log(sql.getTable('SQK'));
+	
+	console.log('-----------------');
+	
+	// ALTER TABLE
+	console.log(sql.alter('SQL', [1,2,3]));
+	console.log(sql.getTable('SQL'));
+	console.log(sql.getTableAll());
+	
+	console.log('-----------------');
+	
+	// DROP TABLE
+	console.log(sql.create('SQK', ['A', 'B', 'C', 'D', 'E']));
+	// ERROR: create() is changing before table to new table.
+	
+	console.log(sql.getTable('SQK'));
+	console.log(sql.getTableAll());
+	
+	console.log(sql.drop('SQK'));
+	console.log(sql.getTable('SQK'));
+	console.log(sql.getTableAll());
+	
+	console.log('-----------------');
+}
 
-// CREATE TABLE and like SELECT
-console.log('CREATE TABLE SQL');
-console.log(sql.create('SQL', []));
-
-console.log(sql.getTable('SQL'));
-console.log(sql.getTable('SQK'));
-
-// ALTER TABLE
-console.log(sql.alter('SQL', [1,2,3]));
-console.log(sql.getTable('SQL'));
-
-// DROP TABLE
-console.log(sql.create('SQK', []));
-console.log(sql.getTable('SQK'));
-console.log(sql.drop('SQK'));
-console.log(sql.getTable('SQK'));
-
-console.log('-----------------');
-
+test();
