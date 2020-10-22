@@ -28,11 +28,13 @@ var SQL = function() {
 		return !this.isNull(v);
 	};
 	
-	
+	this.getTableAll = function() {
+		return tableDataArr;
+	};
 	
 	this.getTableIndex = function(tableName) {
 		for (var i = 0; i < tableDataArr.length; i++) {
-			if (tableDataArr[i].name === tableName) {
+			if (tableDataArr[i].name == tableName) {
 				return i;
 			}
 		}
@@ -43,12 +45,9 @@ var SQL = function() {
 	this.getTable = function(tableName) {
 		var index = this.getTableIndex(tableName);
 		
-		try {
-			return tableDataArr[index];
-		}
-		catch(e) {
-			return index;
-		}
+		if (index != -1) return tableDataArr[index];
+		
+		return null;
 	};
 	
 	this.getTableAttr = function(tableName) {
@@ -80,20 +79,27 @@ var SQL = function() {
 		newTable.name = tableName;
 		newTable.attr = tableAttr;
 		
-		
+		try {
+			tableDataArr.push(newTable);
+			return true;
+		}
+		catch(e) {
+			return false;
+		}
 	}
 	
 	this.alter = function(tableName, tableAttr) {
 		var tmpTable = this.getTable(tableName);
 		tmpTable.attr = tableAttr;
 		
-		return this.setTable(tmpTable);
+		var result = this.setTable(tableName, tmpTable);
+		return result;
 	}
 	
 	this.drop = function(tableName) {
 		var index = this.getTableIndex(tableName);
 		
-		if (index === -1)
+		if (index == -1) return false;
 		
 		try {
 			tableDataArr.splice(index, 1);
@@ -102,15 +108,41 @@ var SQL = function() {
 		catch(e) {
 			return false;
 		}
-	}
+	};
 	
 	// DML
-	this.select = function() {
+	this.select = function(tableName, options) {
+		var table = this.getTable(tableName);
+		var arr = new Array();
 		
+		for (var i = 0; i < options.length; i++) {
+			for (var j = 0; j < options[i].length; j++) {
+				var option = options[i][j] = table;
+				arr.push(option.data);
+			}
+		}
+		
+		return arr;
 	}
 	
-	this.insert = function() {
+	this.insert = function(tableName, tuples) {
+		var table = this.getTable(tableName);
+		var result = false;
 		
+		if (tuples.length != 0) {
+			for (var i = 0; i < tuples.length; i++) {
+				table.data.push(tuples[i]);
+			}
+		}
+		
+		try {
+			// Table Update: ALTER TABLE
+			return !result;
+		}
+		catch(e) {
+			// return fasle;
+			return result;
+		}
 	}
 	
 	this.update = function() {
@@ -140,7 +172,26 @@ var SQL = function() {
 	
 }
 
+
+// EXPERIMENT TEST ZONE
 var sql = new SQL();
 
+// CREATE TABLE and like SELECT
+console.log('CREATE TABLE SQL');
 console.log(sql.create('SQL', []));
+
 console.log(sql.getTable('SQL'));
+console.log(sql.getTable('SQK'));
+
+// ALTER TABLE
+console.log(sql.alter('SQL', [1,2,3]));
+console.log(sql.getTable('SQL'));
+
+// DROP TABLE
+console.log(sql.create('SQK', []));
+console.log(sql.getTable('SQK'));
+console.log(sql.drop('SQK'));
+console.log(sql.getTable('SQK'));
+
+console.log('-----------------');
+
