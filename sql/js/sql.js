@@ -1,7 +1,9 @@
 
 
-var SQL = function() {
-	var tableDataArr = new Array();
+var SQL = function () {
+	'use strict';
+	
+	var tableDataArr = [];
 	
 	this.getSampleTable = function() {
 		return {
@@ -23,6 +25,15 @@ var SQL = function() {
 		};
 	};
 	
+	this.getSampleData = function(attrName, domain, key, extra) {
+		return {
+			"attr": attrName,
+			"domain": domain,
+			"key": key,
+			"extra": extra
+		};
+	};
+	
 	// v is null that return true, is not null that return false. And not is added return not isNull()
 	this.isNull = function(v) {
 		return (v === undefined || v === null);
@@ -33,7 +44,7 @@ var SQL = function() {
 	
 	// ONLY TEST
 	this.getTableAll = function() {
-		var arr = new Array();
+		var arr = [];
 		for (var i = 0; i < tableDataArr.length; i++) arr.push(tableDataArr[i]);
 		return arr;
 	};
@@ -118,13 +129,13 @@ var SQL = function() {
 	
 	// DML
 	this.select = function(tableName, options) {
+		// SELECT function have problems, how to have done FROM and WHERE functions?
 		var table = this.getTable(tableName);
 		var arr = new Array();
 		
-		for (var i = 0; i < options.length; i++) {
-			for (var j = 0; j < options[i].length; j++) {
-				var option = options[i][j] = table;
-				arr.push(option.data);
+		for (var i = 0; i < options.length; i++) {	// options is array, about attr
+			for (var j = 0; j < table.data.length; j++) {
+				arr.push(table.data[j](options[i]));
 			}
 		}
 		
@@ -178,6 +189,15 @@ var SQL = function() {
 	
 }
 
+
+var console = function() {
+	this.log = function(data) {
+		console.log(data);
+	};
+	this.dir = function(data) {
+		console.log(data);
+	};
+};
 
 // EXPERIMENT TEST ZONE
 function test() {
