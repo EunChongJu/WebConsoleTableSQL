@@ -1,19 +1,38 @@
 
-
 var SQL = function () {
 	'use strict';
 	
 	var tableDataArr = [];
 	
+//	var tableArr = new Array();
+	
 	this.getSampleTable = function() {
 		return {
-			"name": '',
-			"attr": [],
-			"data": []
+			"name": '',	// Table Name
+			"attr": [],	// Attribute
+			"data": []	// Tuples
 		};
 	};
 	
 	this.getSampleAttr = function() {
+		var attrSample = {
+			"name": "",	// Connected Table Name
+			"attr": [
+				{
+					"name": "",	// Attribute Name
+					"type": ""	// Attribute Type
+				},
+				{
+					"name": "",	// Attribute Name
+					"type": ""	// Attribute Type
+				},
+				{
+					"name": "",	// Attribute Name
+					"type": ""	// Attribute Type
+				}
+			]
+		};
+		
 		return {
 			"name": '',
 			"type": "",	// varchar, char, int, string ...
@@ -43,6 +62,11 @@ var SQL = function () {
 	};
 	
 	// ONLY TEST
+	this.isView = function() {
+		if (tableArr.length) return tableArr;
+		return false;
+	};
+	
 	this.getTableAll = function() {
 		var arr = [];
 		for (var i = 0; i < tableDataArr.length; i++) arr.push(tableDataArr[i]);
@@ -61,10 +85,12 @@ var SQL = function () {
 	
 	this.getTable = function(tableName) {
 		var index = this.getTableIndex(tableName);
-		
 		if (index != -1) return tableDataArr[index];
-		
 		return null;
+		
+//		var index = this.getTableIndex(tableName);
+//		if (!(index === -1)) return tableArr[index];
+//		return null;
 	};
 	
 	this.getTableAttr = function(tableName) {
@@ -74,6 +100,16 @@ var SQL = function () {
 		
 		return table.attr;
 	};
+	
+	/*
+	this.getAttrsByTable = function(tableName) {
+		return this.getTable(tableName).attr;
+	}
+	
+	this.getAttrByTable = function(tableName, attrName) {
+		return this.getAttrsByTable(tableName)[attrName];
+	};
+	*/
 	
 	this.setTable = function(tableName, tableData) {
 		var index = this.getTableIndex(tableName);
@@ -87,6 +123,9 @@ var SQL = function () {
 		catch(e) {
 			return false;
 		}
+		
+//		var index = this.getTableIndex(tableName);
+//		if (!(index === -1)) tableArr[index] = table;
 	};
 	
 	// DDL
@@ -104,6 +143,22 @@ var SQL = function () {
 			return false;
 		}
 	}
+	/*
+	this.create = function(tableName, tableAttr, tableData) {
+		var newTable = tableSample;
+		newTable.name = tableName;
+		newTable.attr = tableAttr;
+		newTable.data = tableData;
+		
+		try {
+			tableArr.push(newTable);
+			return true;
+		}
+		catch (e) {
+			return false;
+		}
+	};
+	*/
 	
 	this.alter = function(tableName, tableAttr) {
 		var tmpTable = this.getTable(tableName);
@@ -111,6 +166,14 @@ var SQL = function () {
 		
 		var result = this.setTable(tableName, tmpTable);
 		return result;
+		
+//		try {
+//			this.setTable(tableName, tmpTable);
+//			return true;
+//		}
+//		catch (e) {
+//			return false;
+//		}
 	}
 	
 	this.drop = function(tableName) {
